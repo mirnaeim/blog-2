@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -18,7 +19,7 @@ class MyBaseModel(models.Model):
 
 class Category(MyBaseModel):
     title = models.CharField(max_length=250, null=False, blank=False, verbose_name='Title')
-    body = models.TextField(null=False, blank=False, verbose_name='Description')
+    body = models.TextField(null=False, blank=False, verbose_name='Body')
 
     class Meta:
         verbose_name = 'Category'
@@ -31,7 +32,7 @@ class Category(MyBaseModel):
 
 class Post(MyBaseModel):
     title = models.CharField(max_length=250, null=False, blank=False, verbose_name='Title')
-    body = models.TextField(null=False, blank=False, verbose_name='Description')
+    body = models.TextField(null=False, blank=False, verbose_name='Body')
     slug = models.SlugField(unique=True)
     category = models.ForeignKey(Category, null=False, blank=False, on_delete=models.PROTECT,
                                  related_name='posts', verbose_name='Category')
@@ -43,3 +44,19 @@ class Post(MyBaseModel):
 
     def __str__(self):
         return self.title
+
+
+class Comment(MyBaseModel):
+    body = models.TextField(null=False, blank=False, verbose_name='Body')
+    post = models.ForeignKey(Post, null=False, blank=False, on_delete=models.CASCADE,
+                             related_name='comments', verbose_name='Post')
+    author = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE,
+                               related_name='comments', verbose_name='Author')
+
+    class Meta:
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
+        ordering = ('id',)
+
+    def __str__(self):
+        return self.body

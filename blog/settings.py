@@ -33,6 +33,7 @@ INSTALLED_APPS = [
 
     # Trusted Apps
     'rest_framework',
+    'django_filters',
 
     # My Apps
     'main.apps.MainConfig',
